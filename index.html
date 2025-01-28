@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="favicon.png" rel="icon" type="image/png" />
+    <title>?</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+      #konten-utama {
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+      }
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .popup-content {
+        background: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+      .popup-content button {
+        margin-top: 20px;
+      }
+
+      .pause-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.3);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        line-height: 24px;
+      }
+
+      .image-container {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        scroll-behavior: smooth;
+        width: 100%;
+        margin: auto;
+        border: 1px solid #ddd;
+      }
+      .image-container img {
+        flex-shrink: 0;
+        width: auto;
+        height: 100%;
+        margin-right: 10px;
+      }
+
+      #link-surat {
+        margin: 40px 0;
+        text-align: center;
+      }
+      #link-surat h2 {
+        font-weight: bold;
+        font-family: "Arial", sans-serif;
+        text-transform: uppercase;
+        margin-bottom: 1.5em;
+      }
+
+      #link-surat a {
+        text-decoration: none;
+        color: white;
+        background-color: black;
+        padding: 10px 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        display: inline-block;
+        transition: background-color 0.3s;
+        width:100%;
+      }
+
+      #link-surat a:hover {
+        background-color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="popup" id="popup">
+      <div class="popup-content">
+        <h1 id="popup-emoji"><span>&#128584;</span></h1>
+        <button id="start-button" class="btn btn-primary">MULAI</button>
+      </div>
+    </div>
+
+    <div id="konten-utama">
+      <div class="pause-icon" id="pause-icon">&#10074;&#10074;</div>
+      <div class="image-container" id="image-container">
+        <img src="main.webp" />
+        <section id="link-surat">
+          <h2>Surat dari Uhuy<br/>&#128140;</h2>
+          <div class="row row-cols-2">
+            <div class="col">
+              <a href="surat/kakrevi.jpg" target="_blank">Kak Revi</a>
+            </div>
+            <div class="col">
+              <a href="surat/kakely.jpg" target="_blank">Kak Ely</a>
+            </div>
+            <div class="col">
+              <a href="surat/lia.jpg" target="_blank">Lia</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <audio id="background-music" loop>
+      <source src="song1.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Popup logic
+        const emojis = ["&#128584;", "&#128585;", "&#128586;", "&#128053;"];
+        let clickCount = 0;
+
+        var perintahs = "!";
+        $("#start-button").on("click", function () {
+          if (clickCount < emojis.length - 1) {
+            clickCount++;
+            $("#popup-emoji").html(`<span>${emojis[clickCount]}</span>`);
+            $("#start-button").html(`MULAI ` + perintahs);
+            perintahs += "!";
+          } else {
+            $("#popup").hide();
+            $("#background-music")[0].volume = 0.5;
+            $("#background-music")[0].play();
+            $("#konten-utama").css("opacity", 1);
+            document.title = "For Maria with 🩷 from UHUY";
+          }
+        });
+
+        // Pause music functionality
+        $("#pause-icon").on("click", function () {
+          const music = $("#background-music")[0];
+          if (music.paused) {
+            music.play();
+            $("#pause-icon").html("&#10074;&#10074;");
+          } else {
+            music.pause();
+            $("#pause-icon").html("&#9658;");
+          }
+        });
+
+        // Change music
+        $("#link-surat a").on("click", function () {
+          if ($("#background-music").attr("src") !== "song2.mp3") {
+            $("#background-music").attr("src", "song2.mp3");
+            $("#background-music")[0].load();
+            $("#background-music")[0].play();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
