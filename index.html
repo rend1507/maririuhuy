@@ -58,6 +58,33 @@
       .popup-content button {
         margin-top: 20px;
       }
+      .fade-text {
+        font-size: 24px;
+        font-weight: bold;
+        color: black;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        animation: fadeInOut 4s ease-in-out;
+      }
+
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        80% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
 
       .pause-icon {
         position: absolute;
@@ -187,11 +214,48 @@
             $("#start-button").html(`MULAI ` + perintahs);
             perintahs += "!";
           } else {
-            $("#popup").hide();
-            $("#background-music")[0].volume = 0.3;
-            $("#background-music")[0].play();
-            $("#konten-utama").css("opacity", 1);
-            document.title = "For Maria with 🩷 from UHUY";
+            // Change background to white and hide popup content
+            $(".popup").css("background", "white");
+            $(".popup-content").fadeOut(500);
+
+            // Sequentially display fading texts
+            const fadeTexts = [
+              `Terima kasih sudah bertumbuh bersama dalam Kristus...`,
+              `Kita bakal tetep jalankan misi mulia Tuhan,<br/>begitu juga dengan Kak Mar yaa 😇`,
+              `See you next time.....`,
+              `Matius 5:16<br/>Demikianlah hendaknya terangmu bercahaya di depan orang, supaya mereka melihat perbuatanmu yang baik dan memuliakan Bapamu yang di sorga.`,
+            ];
+            let index = 0;
+
+            function showNextText() {
+              if (index < fadeTexts.length) {
+                const fadeTextDiv = $("<div>")
+                  .addClass("fade-text")
+                  .html(fadeTexts[index]);
+                $(".popup").append(fadeTextDiv);
+
+                setTimeout(() => {
+                  fadeTextDiv.fadeOut(500, function () {
+                    $(this).remove();
+                    index++;
+                    showNextText();
+                  });
+                }, 2800);
+
+                $("#background-music")[0].volume = 0.3;
+                $("#background-music")[0].play();
+              } else {
+                // After 12 seconds, show the main content
+                setTimeout(() => {
+                  $("#popup").fadeOut(1000, function () {
+                    $("#konten-utama").css("opacity", 1);
+                    document.title = "For Maria with 🩷 from UHUY";
+                  });
+                }, 300);
+              }
+            }
+
+            showNextText();
           }
         });
 
